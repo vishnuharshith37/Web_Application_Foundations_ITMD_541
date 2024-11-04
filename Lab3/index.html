@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Tip Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            margin-top: 10px;
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Tip Calculator - ITMD 541 Lab 3 - Vishnu Harshith Mallu</h1>
+        <form id="tipCalculator">
+            <label for="billTotal">Bill Total ($):</label>
+            <input type="number" id="billTotal" placeholder="Enter bill amount" required><br>
+
+            <label for="tipPercentage">Tip Percentage:</label>
+            <span id="tipValue">%</span>
+            <input type="range" id="tipPercentage" min="0" max="100" value="15">
+            
+
+            <label for="tipAmount">Tip Amount ($):</label>
+            <input type="text" id="tipAmount" disabled><br>
+
+            <label for="totalWithTip">Total Bill with Tip ($):</label>
+            <input type="text" id="totalWithTip" disabled><br>
+
+            <label for="currency">Select Currency:</label>
+            <select id="currency">
+                <option value="USD">USD</option>
+                <option value="INR">INR</option>
+                <option value="JPY">JPY</option>
+            </select>
+        </form>
+        <div class="conversion-rates">
+            <p>Conversion Rates:</p>
+            <p>1 USD = 84.07 INR</p>
+            <p>1 USD = 149.34 JPY</p>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const billTotalInput = document.getElementById('billTotal');
+    const tipPercentageInput = document.getElementById('tipPercentage');
+    const tipAmountInput = document.getElementById('tipAmount');
+    const totalWithTipInput = document.getElementById('totalWithTip');
+    const tipValueDisplay = document.getElementById('tipValue');
+    const currencySelect = document.getElementById('currency');
+
+    const conversionRates = {
+        USD: 1,
+        INR: 84.07,
+        JPY: 149.34
+    };
+
+    function calculateTip() {
+        const billTotal = parseFloat(billTotalInput.value);
+        const tipPercentage = parseFloat(tipPercentageInput.value);
+
+        if (isNaN(billTotal) || billTotal < 0) {
+            alert("Please enter a valid bill amount.");
+            return;
+        }
+
+        const tipAmount = (billTotal * (tipPercentage / 100)).toFixed(2);
+        const totalWithTip = (billTotal + parseFloat(tipAmount)).toFixed(2);
+
+        const selectedCurrency = currencySelect.value;
+        const convertedTipAmount = (tipAmount * conversionRates[selectedCurrency]).toFixed(2);
+        const convertedTotalWithTip = (totalWithTip * conversionRates[selectedCurrency]).toFixed(2);
+
+        tipAmountInput.value = `${convertedTipAmount} ${selectedCurrency}`;
+        totalWithTipInput.value = `${convertedTotalWithTip} ${selectedCurrency}`;
+        tipValueDisplay.textContent = `${tipPercentage}%`;
+    }
+
+    billTotalInput.addEventListener('input', calculateTip);
+    tipPercentageInput.addEventListener('input', calculateTip);
+    currencySelect.addEventListener('change', calculateTip);
+});
+
+</script>
+</body>
+</html>
